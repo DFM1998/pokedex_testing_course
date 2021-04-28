@@ -3,7 +3,7 @@ package test.java;
 import static org.junit.Assert.*;
 
 import org.junit.*;
-import org.sql2o.*;
+import org.junit.runners.Parameterized;
 
 import main.java.Move;
 import main.java.Pokemon;
@@ -13,23 +13,31 @@ public class PokemonTest {
   @Rule
   public DatabaseRule database = new DatabaseRule();
 
+  // checkout if a pokemon get right instantiates correctly
+  // Unit Test
   @Test
   public void Pokemon_instantiatesCorrectly_true() {
     Pokemon myPokemon = new Pokemon("Squirtle", "Water", "None", "A cute turtle", 50.0, 12, 16, false);
     assertEquals(true, myPokemon instanceof Pokemon);
   }
 
+  // after instantiates a pokemon check if it is possible to get his name
+  // Unit Test
   @Test
   public void getName_pokemonInstantiatesWithName_String() {
     Pokemon myPokemon = new Pokemon("Squirtle", "Water", "None", "A cute turtle", 50.0, 12, 16, false);
     assertEquals("Squirtle", myPokemon.getName());
   }
 
+  // checkout if the pokemon class is empty
+  // Unit Test
   @Test
   public void all_emptyAtFirst() {
     assertEquals(Pokemon.all().size(), 0);
   }
 
+  // checkout if inserting twice the same pokemon if they are equal
+  // Unit Test
   @Test
   public void equals_returnsTrueIfPokemonAreTheSame_true() {
     Pokemon firstPokemon = new Pokemon("Squirtle", "Water", "None", "A cute turtle", 50.0, 12, 16, false);
@@ -37,6 +45,8 @@ public class PokemonTest {
     assertTrue(firstPokemon.equals(secondPokemon));
   }
 
+  // checkout if the pokemon has been saved correctly
+  // Integration Test
   @Test
   public void save_savesPokemonCorrectly_1() {
     Pokemon newPokemon = new Pokemon("Squirtle", "Water", "None", "A cute turtle", 50.0, 12, 16, false);
@@ -44,6 +54,8 @@ public class PokemonTest {
     assertEquals(1, Pokemon.all().size());
   }
 
+  // check at the database if you can find the pokemon
+  // Integration Test
   @Test
   public void find_findsPokemonInDatabase_true() {
     Pokemon myPokemon = new Pokemon("Squirtle", "Water", "None", "A cute turtle", 50.0, 12, 16, false);
@@ -52,6 +64,8 @@ public class PokemonTest {
     assertTrue(myPokemon.equals(savedPokemon));
   }
 
+  // Add a move to a pokemon and save it at the database
+  // Integration Test
   @Test
   public void addMove_addMoveToPokemon() {
     Move myMove = new Move("Punch", "Normal", 50.0, 100);
@@ -63,6 +77,8 @@ public class PokemonTest {
     assertTrue(myMove.equals(savedMove));
   }
 
+  // Delete all the pokemon with the corresponding moves
+  // Integration Test
   @Test
   public void delete_deleteAllPokemonAndMovesAssociations() {
     Pokemon myPokemon = new Pokemon("Squirtle", "Water", "None", "A cute turtle", 50.0, 12, 16, false);
@@ -75,6 +91,8 @@ public class PokemonTest {
     assertEquals(0, myPokemon.getMoves().size());
   }
 
+  // Search for a pokemon at the database
+  // Integration Test
   @Test
   public void searchByName_findAllPokemonWithSearchInputString_List() {
     Pokemon myPokemon = new Pokemon("Squirtle", "Water", "None", "A cute turtle", 50.0, 12, 16, false);
@@ -82,6 +100,8 @@ public class PokemonTest {
     assertEquals(myPokemon, Pokemon.searchByName("squir").get(0));
   }
 
+  // Testing a normal fight
+  // Integration Test
   @Test
   public void fighting_damagesDefender() {
     Pokemon myPokemon = new Pokemon("Squirtle", "Water", "Normal", "A cute turtle", 50.0, 12, 16, false);
@@ -97,5 +117,6 @@ public class PokemonTest {
     myMove.attack(myPokemon);
     assertEquals(400, myPokemon.hp);
   }
+
 
 }
