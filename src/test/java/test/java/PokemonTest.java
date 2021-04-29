@@ -3,6 +3,8 @@ package test.java;
 import static org.junit.Assert.*;
 
 import org.junit.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.runners.Parameterized;
 
 import main.java.Move;
@@ -102,12 +104,15 @@ public class PokemonTest {
 
   // Testing a normal fight
   // Integration Test
-  @Test
-  public void fighting_damagesDefender() {
-    Pokemon myPokemon = new Pokemon("Squirtle", "Water", "Normal", "A cute turtle", 50.0, 12, 16, false);
+  @ParameterizedTest()
+  @CsvSource(value = {
+          "Squirtle:Water:Normal:A cute turtle:50.0:12:16:false:Bubble:Water:50.0:100:300"
+  })
+  public void fighting_damagesDefender(String pokemonName, String type1, String type2, String description, double weight, int height, int evolves, boolean mega_evolves, String moveName, String type, double power, int accuracy, int result) {
+    Pokemon myPokemon = new Pokemon( pokemonName,  type1,  type2,  description,  weight,  height,  evolves,  mega_evolves);
     myPokemon.save();
     myPokemon.hp = 500;
-    Move myMove = new Move("Bubble", "Water", 50.0, 100);
+    Move myMove = new Move(moveName, type, power, accuracy);
     myMove.attack(myPokemon);
     System.out.println(myPokemon.hp);
     myMove.attack(myPokemon);
@@ -115,7 +120,7 @@ public class PokemonTest {
     myMove.attack(myPokemon);
         System.out.println(myPokemon.hp);
     myMove.attack(myPokemon);
-    assertEquals(400, myPokemon.hp);
+    assertEquals(result, myPokemon.hp);
   }
 
 
